@@ -2,6 +2,10 @@
 language: android
 jdk: oraclejdk8
  
+# Git permission acces for Travis
+before_install:
+ - chmod +x gradlew
+ 
 android:
   components:
     - tools
