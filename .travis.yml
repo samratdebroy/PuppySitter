@@ -39,4 +39,3 @@ script:
 
  notifications:
     slack: coen390mothership:5f8plF1OuB8xbnz1rNGnVQZy
-    email: false
