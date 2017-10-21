@@ -1,15 +1,6 @@
 # http://docs.travis-ci.com/user/languages/android/
 language: android
 jdk: oraclejdk8
-
-# To avoid uploading the cache after every build    
-before_cache:
- -rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
- -rm -fr $HOME/.gradle/caches/*/plugin-resolution/
-cache:
-directories:
- -$HOME/.gradle/caches/
- -$HOME/.gradle/wrapper/
  
 android:
   components:
