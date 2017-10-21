@@ -1,0 +1,27 @@
+# http://docs.travis-ci.com/user/languages/android/
+language: android
+jdk: oraclejdk8
+
+# To avoid uploading the cache after every build    
+before_cache:
+ -rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
+ -rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+cache:
+directories:
+ -$HOME/.gradle/caches/
+ -$HOME/.gradle/wrapper/
+ 
+android:
+  components:
+    - tools
+    - platform-tools
+    - tools
+
+    # The BuildTools version used by your project
+    - build-tools-26.0.1
+
+    # The SDK version used to compile your project
+    - android-26
+    
+script:
+   - ./gradlew build connectedCheck
