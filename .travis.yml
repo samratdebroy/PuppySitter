@@ -36,6 +36,3 @@ before_script:
   
 script:
    - ./gradlew build connectedCheck
-
- notifications:
-    slack: coen390mothership:5f8plF1OuB8xbnz1rNGnVQZy
