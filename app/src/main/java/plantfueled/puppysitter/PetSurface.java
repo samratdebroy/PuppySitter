@@ -24,11 +24,14 @@ public class PetSurface extends SurfaceView implements SurfaceHolder.Callback {
     private Paint grassPaint;
     private Paint fencePaint;
     private Paint cloudPaint;
+    private Paint petNamePaint;
 
     private ArrayList<Rect> clouds;
     private float cloudCounter;
 
     private DrawThread drawThread;
+
+    private Pet pet;
 
     public PetSurface(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
@@ -45,9 +48,17 @@ public class PetSurface extends SurfaceView implements SurfaceHolder.Callback {
         cloudPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         cloudPaint.setColor(Color.WHITE);
 
+        petNamePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        petNamePaint.setColor(Color.WHITE);
+        petNamePaint.setTextSize(64);
+
         clouds = new ArrayList<Rect>();
 
         getHolder().addCallback(this);
+    }
+
+    public void setPet(Pet pet) {
+        this.pet = pet;
     }
 
     public void update(float deltaSeconds) {
@@ -113,6 +124,43 @@ public class PetSurface extends SurfaceView implements SurfaceHolder.Callback {
         // Draw clouds
         for (Rect cloud : clouds) {
             canvas.drawRect(cloud, cloudPaint);
+        }
+
+        // Draw pets name
+        canvas.drawText(pet.getPetName(), 20, getHeight() * 0.35f, petNamePaint);
+
+        // Draw hunger
+        Pet.HungerStat hunger = pet.getHungerStatus();
+        switch (hunger) {
+            case STARVING:
+                canvas.drawText("STARVING", 20, getHeight() * 0.40f, petNamePaint);
+                break;
+            case HUNGRY:
+                canvas.drawText("HUNGRY", 20, getHeight() * 0.40f, petNamePaint);
+                break;
+            case SATISFIED:
+                canvas.drawText("SATISFIED", 20, getHeight() * 0.40f, petNamePaint);
+                break;
+            case FULL:
+                canvas.drawText("FULL", 20, getHeight() * 0.40f, petNamePaint);
+                break;
+        }
+
+        // Draw lonely
+        Pet.LonelyStat lonely = pet.getLonelyStatus();
+        switch (lonely) {
+            case ABANDONED:
+                canvas.drawText("ABANDONED", 20, getHeight() * 0.45f, petNamePaint);
+                break;
+            case LONELY:
+                canvas.drawText("LONELY", 20, getHeight() * 0.45f, petNamePaint);
+                break;
+            case SATISFIED:
+                canvas.drawText("SATISFIED", 20, getHeight() * 0.45f, petNamePaint);
+                break;
+            case FULL:
+                canvas.drawText("FULL", 20, getHeight() * 0.45f, petNamePaint);
+                break;
         }
     }
 
