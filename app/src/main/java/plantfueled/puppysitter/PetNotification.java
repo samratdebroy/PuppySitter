@@ -10,9 +10,11 @@ public class PetNotification {
     // Notification stuff
     private Context context;
     private int duration = Toast.LENGTH_SHORT;
+    private Toast myToast;
 
     PetNotification(Context context){
         this.context = context;
+        myToast = Toast.makeText(context, null, duration);
     }
 
     public void notHungry(String petName){
@@ -73,7 +75,8 @@ public class PetNotification {
         handler.post(new Runnable() {
             @Override
             public void run() {
-                Toast.makeText(context, text, duration).show();
+                myToast.setText(text);
+                myToast.show();
             }
         });
     }
