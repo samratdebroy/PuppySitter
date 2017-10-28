@@ -7,15 +7,17 @@ import android.widget.Toast;
 
 public class PetNotification {
 
-    private Pet.HungerStat lastHungerStat;
-    private Pet.LonelyStat lastLonelyStat;
-
     // Notification stuff
     private Context context;
     private int duration = Toast.LENGTH_SHORT;
 
     PetNotification(Context context){
         this.context = context;
+    }
+
+    public void notHungry(String petName){
+        CharSequence text = petName + " isn't hungry right now";
+        toast(text);
     }
 
     public void hungerChange(Pet.HungerStat stat,  String petName){

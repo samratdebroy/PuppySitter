@@ -2,12 +2,23 @@ package plantfueled.puppysitter;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 
 public class MainActivity extends AppCompatActivity {
 
-    private PetSurface petSurface;
+    protected static final String TAG = "Main Activity";
 
+    private PetSurface petSurface;
     private Pet pet;
+
+    protected ImageButton feedButton = null;
+    protected ImageView bonetoFeed = null;
+    protected  Animation boneFeedAnimation = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -16,9 +27,34 @@ public class MainActivity extends AppCompatActivity {
 
         // Load pet
         pet = new Pet("Doggo the Debug Dog",MainActivity.this);
-
         petSurface = (PetSurface) findViewById(R.id.main_pet_view);
         petSurface.setPet(pet);
+        setupUI();
+    }
+
+    protected void setupUI()
+    {
+        feedButton = (ImageButton) findViewById(R.id.feedButton);
+        feedButton.setOnClickListener(onClickFeedButton);
+
+        bonetoFeed = (ImageView)  findViewById(R.id.boneImageView);
+        boneFeedAnimation = AnimationUtils.loadAnimation(this, R.anim.feedbone);
 
     }
+
+    private ImageButton.OnClickListener onClickFeedButton = new ImageButton.OnClickListener(){
+        public void onClick(View v){
+            Log.d(TAG,"The onClick() feedButton Event");
+
+            // Feeds the pet if the animation isn't already running and the pet can eat
+            if(boneFeedAnimation.hasEnded() || !boneFeedAnimation.hasStarted()){
+                if(pet.feed()){
+                    bonetoFeed.setVisibility(View.VISIBLE);
+                    bonetoFeed.startAnimation(boneFeedAnimation);
+                    bonetoFeed.setVisibility(View.INVISIBLE);
+                }
+            }
+        }
+    };
+
 }

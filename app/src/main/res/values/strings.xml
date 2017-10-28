@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">PuppySitter</string>
+    <string name="feedButton">FeedButton</string>
 </resources>
