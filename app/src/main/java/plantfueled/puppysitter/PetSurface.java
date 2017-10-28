@@ -63,7 +63,7 @@ public class PetSurface extends SurfaceView implements SurfaceHolder.Callback {
 
     public void update(float deltaSeconds) {
         //Log.i("PUPPYSITTER", String.valueOf(1.0 / deltaSeconds));
-
+        pet.updatePetStats();
         // Spawn cloud every 2 seconds
         cloudCounter += deltaSeconds;
         if (cloudCounter >= 2) {

@@ -15,7 +15,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // Load pet
-        pet = new Pet("Doggo the Debug Dog");
+        pet = new Pet("Doggo the Debug Dog",MainActivity.this);
 
         petSurface = (PetSurface) findViewById(R.id.main_pet_view);
         petSurface.setPet(pet);

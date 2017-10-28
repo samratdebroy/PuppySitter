@@ -1,5 +1,7 @@
 package plantfueled.puppysitter;
 
+import android.content.Context;
+
 import java.util.Calendar;
 import java.util.Date;
 
@@ -11,6 +13,10 @@ public class Pet {
     private float hungerLevel = 100;
     private float lonelyLevel = 100;
     private Date lastPetUpdate;
+    private PetNotification petNotification;
+
+    final float HUNGER_RATE = 10; // points per minute lost
+    final float LONELY_RATE = 15; // points per minute lost
 
     public enum HungerStat{
         STARVING(5),
@@ -37,24 +43,30 @@ public class Pet {
     }
 
     /// Constructor
-    public Pet(String name){
+    public Pet(String name, Context context){
         petName = name;
         petCounter++;
         petID = petCounter;
         lastPetUpdate = Calendar.getInstance().getTime();
+        petNotification = new PetNotification(context);
     }
 
     // Lower stats with time passed
     public void updatePetStats(){
-        final int hungerRate = 10; // points per minute lost
-        final int lonelyRate = 15; // points per minute lost
-        int minutesPassed = (int)(Calendar.getInstance().getTime().getTime() - lastPetUpdate.getTime())*1000*60;
+        int minutesPassed = (int)(Calendar.getInstance().getTime().getTime() - lastPetUpdate.getTime())/1000/60;
 
         // update the stats according to how many minutes have passed
-        if(minutesPassed > hungerRate || minutesPassed > lonelyRate){
-            hungerLevel = Math.max(0, hungerLevel - minutesPassed/hungerRate);
-            lonelyLevel = Math.max(0, lonelyLevel - minutesPassed/lonelyRate);
+        if(minutesPassed >= 1){
+
+            // Cache current Pet Stats
+            HungerStat lastHungerStat = getHungerStatus();
+            LonelyStat lastLonelyStat = getLonelyStatus();
+
+            hungerLevel = Math.max(0, hungerLevel - minutesPassed/HUNGER_RATE);
+            lonelyLevel = Math.max(0, lonelyLevel - minutesPassed/LONELY_RATE);
             lastPetUpdate = Calendar.getInstance().getTime();
+
+            checkStatusChange(lastHungerStat,lastLonelyStat);
         }
 
     }
@@ -87,10 +99,26 @@ public class Pet {
             return LonelyStat.FULL;
     }
 
+    public void checkStatusChange(HungerStat lastHungerStat, LonelyStat lastLonelyStat){
+
+        // Check for Hunger Status Change
+        if(lastHungerStat != getHungerStatus()){
+            lastHungerStat = getHungerStatus();
+            petNotification.hungerChange(lastHungerStat, petName);
+        }
+
+        // Check for Loneliness Status Change
+        if(lastLonelyStat != getLonelyStatus()){
+            lastLonelyStat = getLonelyStatus();
+            petNotification.lonelyChange(lastLonelyStat, petName);
+        }
+    }
+
     //*****GETTERS & SETTERS*****//
     public int getPetID() {return petID;}
     public String getPetName() {return petName;}
     public void setPetName(String petName) {this.petName = petName;}
     public float getHungerLevel() {return hungerLevel;}
     public float getLonelyLevel() {return lonelyLevel;}
+    public PetNotification getNotification() {return petNotification;}
 }
