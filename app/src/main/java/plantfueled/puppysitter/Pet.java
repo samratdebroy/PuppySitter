@@ -49,7 +49,6 @@ public class Pet {
         petID = petCounter;
         lastPetUpdate = Calendar.getInstance().getTime();
         petNotification = new PetNotification(context);
-        petNotification.setPet(this);
     }
 
     // Lower stats with time passed
@@ -58,10 +57,16 @@ public class Pet {
 
         // update the stats according to how many minutes have passed
         if(minutesPassed >= 1){
+
+            // Cache current Pet Stats
+            HungerStat lastHungerStat = getHungerStatus();
+            LonelyStat lastLonelyStat = getLonelyStatus();
+
             hungerLevel = Math.max(0, hungerLevel - minutesPassed/HUNGER_RATE);
             lonelyLevel = Math.max(0, lonelyLevel - minutesPassed/LONELY_RATE);
-            petNotification.checkStatusChange();
             lastPetUpdate = Calendar.getInstance().getTime();
+
+            checkStatusChange(lastHungerStat,lastLonelyStat);
         }
 
     }
@@ -92,6 +97,21 @@ public class Pet {
             return LonelyStat.SATISFIED;
         else
             return LonelyStat.FULL;
+    }
+
+    public void checkStatusChange(HungerStat lastHungerStat, LonelyStat lastLonelyStat){
+
+        // Check for Hunger Status Change
+        if(lastHungerStat != getHungerStatus()){
+            lastHungerStat = getHungerStatus();
+            petNotification.hungerChange(lastHungerStat, petName);
+        }
+
+        // Check for Loneliness Status Change
+        if(lastLonelyStat != getLonelyStatus()){
+            lastLonelyStat = getLonelyStatus();
+            petNotification.lonelyChange(lastLonelyStat, petName);
+        }
     }
 
     //*****GETTERS & SETTERS*****//

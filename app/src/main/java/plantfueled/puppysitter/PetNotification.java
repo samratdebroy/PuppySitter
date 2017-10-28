@@ -7,55 +7,33 @@ import android.widget.Toast;
 
 public class PetNotification {
 
-    private Pet pet;
     private Pet.HungerStat lastHungerStat;
     private Pet.LonelyStat lastLonelyStat;
 
     // Notification stuff
     private Context context;
-    int duration = Toast.LENGTH_SHORT;
+    private int duration = Toast.LENGTH_SHORT;
 
     PetNotification(Context context){
         this.context = context;
     }
 
-    public void setPet(Pet pet) {
-        this.pet = pet;
-        lastHungerStat = pet.getHungerStatus();
-        lastLonelyStat = pet.getLonelyStatus();
-    }
-
-    public void checkStatusChange(){
-
-        // Check for Hunger Status Change
-        if(lastHungerStat != pet.getHungerStatus()){
-            lastHungerStat = pet.getHungerStatus();
-            hungerChange(lastHungerStat);
-        }
-
-        // Check for Loneliness Status Change
-        if(lastLonelyStat != pet.getLonelyStatus()){
-            lastLonelyStat = pet.getLonelyStatus();
-            lonelyChange(lastLonelyStat);
-        }
-    }
-
-    private void hungerChange(Pet.HungerStat stat){
+    public void hungerChange(Pet.HungerStat stat,  String petName){
 
         CharSequence text = "";
         switch (stat){
 
             case STARVING:
-                text = pet.getPetName() + " is starving";
+                text = petName + " is starving";
                 break;
             case HUNGRY:
-                text = pet.getPetName() + " is hungry";
+                text = petName + " is hungry";
                 break;
             case SATISFIED:
-                text = pet.getPetName() + " is satisfied with its hunger";
+                text = petName + " is satisfied with its hunger";
                 break;
             case FULL:
-                text = pet.getPetName() + " is full and can't eat anymore";
+                text = petName + " is full and can't eat anymore";
                 break;
         }
         if(text != "")
@@ -63,21 +41,21 @@ public class PetNotification {
 
     };
 
-    private void lonelyChange(Pet.LonelyStat stat){
+    public void lonelyChange(Pet.LonelyStat stat, String petName){
         CharSequence text = "";
         switch (stat){
 
             case ABANDONED:
-                text = pet.getPetName() + " feels abandoned";
+                text = petName + " feels abandoned";
                 break;
             case LONELY:
-                text = pet.getPetName() + " is lonely";
+                text = petName + " is lonely";
                 break;
             case SATISFIED:
-                text = pet.getPetName() + " is happy";
+                text = petName + " is happy";
                 break;
             case FULL:
-                text = pet.getPetName() + " socialized as much as it could";
+                text = petName + " socialized as much as it could";
                 break;
         }
         if(text != "")
