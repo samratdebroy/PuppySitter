@@ -18,7 +18,11 @@ public class MainActivity extends AppCompatActivity {
 
     protected ImageButton feedButton = null;
     protected ImageView bonetoFeed = null;
-    protected  Animation boneFeedAnimation = null;
+    protected Animation boneFeedAnimation = null;
+
+
+    private ImageView dogImage;
+    private Animation dogHopAnimation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +44,8 @@ public class MainActivity extends AppCompatActivity {
         bonetoFeed = (ImageView)  findViewById(R.id.boneImageView);
         boneFeedAnimation = AnimationUtils.loadAnimation(this, R.anim.feedbone);
 
+        dogImage = (ImageView) findViewById(R.id.img_puppy);
+        dogHopAnimation = AnimationUtils.loadAnimation(this, R.anim.dog_hop);
     }
 
     private ImageButton.OnClickListener onClickFeedButton = new ImageButton.OnClickListener(){
@@ -47,11 +53,12 @@ public class MainActivity extends AppCompatActivity {
             Log.d(TAG,"The onClick() feedButton Event");
 
             // Feeds the pet if the animation isn't already running and the pet can eat
-            if(boneFeedAnimation.hasEnded() || !boneFeedAnimation.hasStarted()){
+            if(dogHopAnimation.hasEnded() || !dogHopAnimation.hasStarted()){
                 if(pet.feed()){
                     bonetoFeed.setVisibility(View.VISIBLE);
                     bonetoFeed.startAnimation(boneFeedAnimation);
                     bonetoFeed.setVisibility(View.INVISIBLE);
+                    dogImage.startAnimation(dogHopAnimation);
                 }
             }
         }
