@@ -51,6 +51,12 @@ public class Pet {
         petNotification = new PetNotification(context);
     }
 
+    public Pet(String name, Context context, float hungerLevel, float lonelyLevel){
+        this(name, context);
+        this.hungerLevel = hungerLevel;
+        this.lonelyLevel = lonelyLevel;
+    }
+
     // Lower stats with time passed
     public void updatePetStats(){
         int minutesPassed = (int)(Calendar.getInstance().getTime().getTime() - lastPetUpdate.getTime())/1000/60;
