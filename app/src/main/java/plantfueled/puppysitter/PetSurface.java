@@ -150,16 +150,16 @@ public class PetSurface extends SurfaceView implements SurfaceHolder.Callback {
         Pet.LonelyStat lonely = pet.getLonelyStatus();
         switch (lonely) {
             case ABANDONED:
-                canvas.drawText("ABANDONED", 20, getHeight() * 0.45f, petNamePaint);
+                //canvas.drawText("ABANDONED", 20, getHeight() * 0.45f, petNamePaint);
                 break;
             case LONELY:
-                canvas.drawText("LONELY", 20, getHeight() * 0.45f, petNamePaint);
+                //canvas.drawText("LONELY", 20, getHeight() * 0.45f, petNamePaint);
                 break;
             case SATISFIED:
-                canvas.drawText("SATISFIED", 20, getHeight() * 0.45f, petNamePaint);
+                //canvas.drawText("SATISFIED", 20, getHeight() * 0.45f, petNamePaint);
                 break;
             case FULL:
-                canvas.drawText("FULL", 20, getHeight() * 0.45f, petNamePaint);
+                //canvas.drawText("FULL", 20, getHeight() * 0.45f, petNamePaint);
                 break;
         }
     }
