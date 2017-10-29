@@ -1,5 +1,6 @@
 package plantfueled.puppysitter;
 
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -20,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
     protected ImageView bonetoFeed = null;
     protected Animation boneFeedAnimation = null;
 
+    private SharedPreferenceHelper sharedPrefHelper;
 
     private ImageView dogImage;
     private Animation dogHopAnimation;
@@ -30,7 +32,12 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // Load pet
-        pet = new Pet("Doggo the Debug Dog",MainActivity.this);
+        sharedPrefHelper = new SharedPreferenceHelper(MainActivity.this);
+        if(sharedPrefHelper.petExists())
+            pet = sharedPrefHelper.loadPet();
+        else
+            pet = new Pet("Doggo the Debug Dog",MainActivity.this);
+
         petSurface = (PetSurface) findViewById(R.id.main_pet_view);
         petSurface.setPet(pet);
         setupUI();
@@ -59,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
                     bonetoFeed.startAnimation(boneFeedAnimation);
                     bonetoFeed.setVisibility(View.INVISIBLE);
                     dogImage.startAnimation(dogHopAnimation);
+                    sharedPrefHelper.savePet(pet);
                 }
             }
         }
