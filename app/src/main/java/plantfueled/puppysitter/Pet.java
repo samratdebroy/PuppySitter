@@ -10,12 +10,12 @@ public class Pet {
     private static int petCounter = 0;   // Static ID increments with every new pet created
     private int petID = 0;
     private String petName = "noName"; // name of pet
-    private float hungerLevel = 100;
+    private float hungerLevel = 50;
     private float lonelyLevel = 100;
     private Date lastPetUpdate;
     private PetNotification petNotification;
 
-    final float HUNGER_RATE = 10; // points per minute lost
+    final float HUNGER_RATE = 10f; // points per minute lost
     final float LONELY_RATE = 15; // points per minute lost
 
     public enum HungerStat{
@@ -51,6 +51,12 @@ public class Pet {
         petNotification = new PetNotification(context);
     }
 
+    public Pet(String name, Context context, float hungerLevel, float lonelyLevel){
+        this(name, context);
+        this.hungerLevel = hungerLevel;
+        this.lonelyLevel = lonelyLevel;
+    }
+
     // Lower stats with time passed
     public void updatePetStats(){
         int minutesPassed = (int)(Calendar.getInstance().getTime().getTime() - lastPetUpdate.getTime())/1000/60;
@@ -72,10 +78,18 @@ public class Pet {
     }
 
     // Reduce hunger (by increasing the value) when pet is fed to a max value of 100
-    public void feed(int hungerRemoved){
-        hungerLevel = Math.min(hungerLevel+hungerRemoved,100);
+    public boolean feed(int hungerRemoved){
+        if(getHungerStatus() == HungerStat.FULL){
+            petNotification.notHungry(petName);
+            return false;
+        }
+        else{
+            hungerLevel = Math.min(hungerLevel+hungerRemoved,100);
+            petNotification.hungerChange(getHungerStatus(), petName);
+            return true;
+        }
     }
-    public void feed(){feed(30);} // Default value for feed() param
+    public boolean feed(){return  feed(30);} // Default value for feed() param
 
     public HungerStat getHungerStatus(){
         if(hungerLevel < HungerStat.STARVING.level)

@@ -16,15 +16,33 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/distanceText"
-        android:layout_width="70dp"
-        android:layout_height="37dp"
+    <ImageButton
+        android:id="@+id/feedButton"
+        android:layout_width="91dp"
+        android:layout_height="101dp"
         android:layout_marginBottom="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginTop="8dp"
+        android:adjustViewBounds="false"
+        android:background="?android:selectableItemBackground"
+        android:contentDescription="@string/feedButton"
+        android:cropToPadding="false"
+        android:scaleType="fitCenter"
+        app:layout_constraintBottom_toBottomOf="@+id/main_pet_view"
+        app:layout_constraintHorizontal_bias="0.971"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.017"
+        app:srcCompat="@drawable/bone"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp" />
+                 
+    <TextView
+        android:id="@+id/distanceText"
+        android:layout_width="70dp"
+        android:layout_height="37dp"
         android:text="FAR"
         android:textAlignment="textStart"
         android:textSize="24sp"
@@ -34,4 +52,33 @@
         app:layout_constraintRight_toRightOf="@+id/main_pet_view"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.017" />
+    <ImageView
+        android:id="@+id/img_puppy"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:scaleType="fitCenter"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:srcCompat="@drawable/puppy"
+        android:layout_marginBottom="96dp" />
+
+    <ImageView
+        android:id="@+id/boneImageView"
+        android:layout_width="247dp"
+        android:layout_height="396dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="371dp"
+        android:adjustViewBounds="false"
+        android:contentDescription=""
+        android:visibility="invisible"
+        app:layout_constraintHorizontal_bias="0.504"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/bonetobefed"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp" />
+  
 </android.support.constraint.ConstraintLayout>
