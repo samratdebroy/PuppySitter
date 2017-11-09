@@ -1,5 +1,6 @@
 package plantfueled.puppysitter;
 
+import android.app.Activity;
 import android.content.Context;
 
 import java.util.Calendar;
@@ -10,10 +11,14 @@ public class Pet {
     private static int petCounter = 0;   // Static ID increments with every new pet created
     private int petID = 0;
     private String petName = "noName"; // name of pet
+
     private float hungerLevel = 50;
     private float lonelyLevel = 100;
+    private float temperatureLevel = 22;
+
     private Date lastPetUpdate;
     private PetNotification petNotification;
+    private PetStatusUI petStatusUI;
 
     final float HUNGER_RATE = 10f; // points per minute lost
     final float LONELY_RATE = 15; // points per minute lost
@@ -42,6 +47,17 @@ public class Pet {
         }
     }
 
+    public enum TemperatureStat{
+        COLD(15),
+        GOOD(22),
+        HOT(25);
+
+        private final int level;
+        TemperatureStat(int threshHold){
+            this.level = threshHold;
+        }
+    }
+
     /// Constructor
     public Pet(String name, Context context){
         petName = name;
@@ -49,6 +65,7 @@ public class Pet {
         petID = petCounter;
         lastPetUpdate = Calendar.getInstance().getTime();
         petNotification = new PetNotification(context);
+        petStatusUI = new PetStatusUI(context,getHungerStatus(),getLonelyStatus(),getTemperatureStatus(),name);
     }
 
     public Pet(String name, Context context, float hungerLevel, float lonelyLevel){
@@ -113,18 +130,29 @@ public class Pet {
             return LonelyStat.FULL;
     }
 
+    public TemperatureStat getTemperatureStatus(){
+        if(temperatureLevel < TemperatureStat.COLD.level)
+            return TemperatureStat.COLD;
+        else if(temperatureLevel > TemperatureStat.HOT.level)
+            return TemperatureStat.HOT;
+        else
+            return TemperatureStat.GOOD;
+    }
+
     public void checkStatusChange(HungerStat lastHungerStat, LonelyStat lastLonelyStat){
 
         // Check for Hunger Status Change
         if(lastHungerStat != getHungerStatus()){
             lastHungerStat = getHungerStatus();
             petNotification.hungerChange(lastHungerStat, petName);
+            petStatusUI.hungerChange(lastHungerStat);
         }
 
         // Check for Loneliness Status Change
         if(lastLonelyStat != getLonelyStatus()){
             lastLonelyStat = getLonelyStatus();
             petNotification.lonelyChange(lastLonelyStat, petName);
+            petStatusUI.lonelyChange(lastLonelyStat);
         }
     }
 
