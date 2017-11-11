@@ -98,6 +98,7 @@ public abstract class BluetoothActivity extends AppCompatActivity implements Blu
 
     public void stopScanForBLEDevice() {
         if (currentState == BluetoothState.BLUETOOTH_SCANNING) {
+            scanHandler.removeCallbacksAndMessages(null);
             bluetoothAdapter.stopLeScan(this);
             currentState = BluetoothState.BLUETOOTH_DISABLED;
         }
@@ -107,6 +108,7 @@ public abstract class BluetoothActivity extends AppCompatActivity implements Blu
     @Override
     public void onLeScan(BluetoothDevice device, int rssi, byte[] scanRecord) {
         if (device.getName().equals(DEVICE_NAME)) {
+            stopScanForBLEDevice();
             blunoBoard = device;
             blunoGatt = device.connectGatt(this, true, new BluetoothDataHandler());
             blunoGatt.discoverServices();
