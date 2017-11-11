@@ -1,10 +1,12 @@
 package plantfueled.puppysitter;
 
 import android.Manifest;
+import android.app.Activity;
 import android.bluetooth.BluetoothGattService;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
@@ -39,6 +41,9 @@ public class MainActivity extends BluetoothActivity {
     private ImageView dogImage;
     private Animation dogHopAnimation;
 
+    // TODO Remove me
+    private Button testButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,6 +62,14 @@ public class MainActivity extends BluetoothActivity {
         petSurface = (PetSurface) findViewById(R.id.main_pet_view);
         petSurface.setPet(pet);
         setupUI();
+
+        testButton = (Button) findViewById(R.id.bt_ble);
+        testButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dogImage.startAnimation(dogHopAnimation);
+            }
+        });
 
         bluetoothInit();
     }
@@ -128,4 +141,13 @@ public class MainActivity extends BluetoothActivity {
         }
     };
 
+    @Override
+    public void onBluetoothSuccess() {
+        testButton.setEnabled(true);
+    }
+
+    @Override
+    public void onBluetoothFailure() {
+
+    }
 }

@@ -10,6 +10,7 @@ import android.bluetooth.BluetoothManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
+import android.support.v7.app.AppCompatActivity;
 
 import java.util.List;
 
@@ -17,7 +18,7 @@ import java.util.List;
  * Created by Simon on 11/10/2017.
  */
 
-public class BluetoothActivity extends Activity implements BluetoothAdapter.LeScanCallback {
+public abstract class BluetoothActivity extends AppCompatActivity implements BluetoothAdapter.LeScanCallback {
 
     public enum BluetoothState {
         BLUETOOTH_UNAVAILABLE,
@@ -117,11 +118,15 @@ public class BluetoothActivity extends Activity implements BluetoothAdapter.LeSc
             if (status == BluetoothGatt.GATT_SUCCESS) {
                 services = gatt.getServices();
                 currentState = BluetoothState.BLUETOOTH_CONNECTED;
+                onBluetoothSuccess();
             }
             else {
                 onError();
             }
         }
     }
+
+    public abstract void onBluetoothSuccess();
+    public abstract void onBluetoothFailure();
 
 }
