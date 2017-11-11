@@ -1,5 +1,13 @@
 package plantfueled.puppysitter;
 
+import android.Manifest;
+import android.app.Activity;
+import android.content.Context;
+import android.content.pm.PackageManager;
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.Toast;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -10,13 +18,19 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends Activity {
 
     protected static final String TAG = "Main Activity";
 
     private PetSurface petSurface;
     private Pet pet;
 
+    private Context appContext;
+
+    public final String TAG = "MainActivity";
+    private static final int PERMISSION_FINE_LOCATION = 1;
+
+    BleService btService;
     protected ImageButton feedButton = null;
     protected ImageView bonetoFeed = null;
     protected Animation boneFeedAnimation = null;
@@ -31,6 +45,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        appContext = getApplicationContext();
+        requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_FINE_LOCATION);
+
         // Load pet
         sharedPrefHelper = new SharedPreferenceHelper(MainActivity.this);
         if(sharedPrefHelper.petExists())
@@ -43,6 +60,44 @@ public class MainActivity extends AppCompatActivity {
         setupUI();
     }
 
+        btService = new BleService(this, appContext);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case PERMISSION_FINE_LOCATION: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+
+                } else {
+
+                   Toast.makeText(appContext, "You need to allow location permissions", Toast.LENGTH_SHORT);
+                }
+                return;
+            }
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        btService.btCheck();
+    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        btService.scanLeDevice();
+        return super.onOptionsItemSelected(item);
+      
     protected void setupUI()
     {
         feedButton = (ImageButton) findViewById(R.id.feedButton);
@@ -53,6 +108,7 @@ public class MainActivity extends AppCompatActivity {
 
         dogImage = (ImageView) findViewById(R.id.img_puppy);
         dogHopAnimation = AnimationUtils.loadAnimation(this, R.anim.dog_hop);
+      
     }
 
     private ImageButton.OnClickListener onClickFeedButton = new ImageButton.OnClickListener(){

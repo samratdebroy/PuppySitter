@@ -16,7 +16,6 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
     <ImageButton
         android:id="@+id/feedButton"
         android:layout_width="91dp"
@@ -39,7 +38,20 @@
         app:srcCompat="@drawable/bone"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp" />
-
+                 
+    <TextView
+        android:id="@+id/distanceText"
+        android:layout_width="70dp"
+        android:layout_height="37dp"
+        android:text="FAR"
+        android:textAlignment="textStart"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.026"
+        app:layout_constraintLeft_toLeftOf="@+id/main_pet_view"
+        app:layout_constraintRight_toRightOf="@+id/main_pet_view"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.017" />
     <ImageView
         android:id="@+id/img_puppy"
         android:layout_width="200dp"
@@ -68,6 +80,5 @@
         app:srcCompat="@drawable/bonetobefed"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp" />
-
-
+  
 </android.support.constraint.ConstraintLayout>
