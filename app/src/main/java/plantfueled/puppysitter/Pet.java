@@ -102,6 +102,20 @@ public class Pet {
             return HungerStat.FULL;
     }
 
+    public boolean love() { return love(5); }
+
+    public boolean love(int lonelyAdded) {
+        if(getLonelyStatus() == LonelyStat.FULL){
+            return false;
+        }
+        else{
+            //hungerLevel = Math.min(hungerLevel+hungerRemoved,100);
+            lonelyLevel = Math.min(lonelyLevel+lonelyAdded, LonelyStat.FULL.level);
+            petNotification.lonelyChange(getLonelyStatus(), petName);
+            return true;
+        }
+    }
+
     public LonelyStat getLonelyStatus(){
         if(lonelyLevel < LonelyStat.ABANDONED.level)
             return LonelyStat.ABANDONED;

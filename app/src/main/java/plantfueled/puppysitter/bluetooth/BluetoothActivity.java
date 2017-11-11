@@ -176,7 +176,7 @@ public abstract class BluetoothActivity extends AppCompatActivity implements Blu
         @Override
         public void onCharacteristicRead(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
             if (status == BluetoothGatt.GATT_SUCCESS) {
-                Log.i(TAG, characteristic.toString());
+                onSoundReceived();
             }
         }
         @Override
@@ -237,6 +237,7 @@ public abstract class BluetoothActivity extends AppCompatActivity implements Blu
     };
 
     public abstract void onBluetoothSuccess();
+    public abstract void onSoundReceived();
     public abstract void onBluetoothFailure();
 
 }

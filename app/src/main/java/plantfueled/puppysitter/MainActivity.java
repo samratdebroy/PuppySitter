@@ -153,4 +153,10 @@ public class MainActivity extends BluetoothActivity {
     public void onBluetoothFailure() {
 
     }
+
+    @Override
+    public void onSoundReceived() {
+        Log.i("WHAT IS LOVE", "BABY DON'T HURT ME");
+        pet.love();
+    }
 }
