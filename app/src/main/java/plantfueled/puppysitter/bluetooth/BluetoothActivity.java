@@ -34,6 +34,7 @@ public abstract class BluetoothActivity extends AppCompatActivity implements Blu
         BLUETOOTH_CONNECTED,
     }
 
+    private static final String SerialPortUUID="0000dfb1-0000-1000-8000-00805f9b34fb";
     private static final String TAG = "BT-ACT";
     private static final String DEVICE_NAME = "Puppyboard";
     private static final int REQUEST_ENABLE_BT = 1337;
@@ -47,6 +48,7 @@ public abstract class BluetoothActivity extends AppCompatActivity implements Blu
     private BluetoothAdapter bluetoothAdapter;
     private BluetoothDevice blunoBoard;
     private BluetoothGatt blunoGatt;
+    private BluetoothGattCharacteristic serialCharacteristic;
 
     private List<BluetoothGattService> services;
 
@@ -140,7 +142,17 @@ public abstract class BluetoothActivity extends AppCompatActivity implements Blu
             if (status == BluetoothGatt.GATT_SUCCESS) {
                 services = gatt.getServices();
                 currentState = BluetoothState.BLUETOOTH_CONNECTED;
-                onBluetoothSuccess();
+
+                serviceLoop:
+                for (BluetoothGattService service : services) {
+                    for (BluetoothGattCharacteristic characteristic : service.getCharacteristics()) {
+                        if (characteristic.getUuid().toString().equals(SerialPortUUID)) {
+                            serialCharacteristic = characteristic;
+                            onBluetoothSuccess();
+                            break serviceLoop;
+                        }
+                    }
+                }
             }
             else {
                 onError();
