@@ -1,24 +1,21 @@
 package plantfueled.puppysitter;
 
 import android.Manifest;
-import android.app.Activity;
-import android.bluetooth.BluetoothGattService;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.os.Handler;
+import android.os.Looper;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Button;
-import android.widget.Toast;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-
-import java.util.List;
+import android.widget.Toast;
 
 import plantfueled.puppysitter.bluetooth.BluetoothActivity;
 
@@ -143,7 +140,13 @@ public class MainActivity extends BluetoothActivity {
 
     @Override
     public void onBluetoothSuccess() {
-        testButton.setEnabled(true);
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                testButton.setEnabled(true);
+            }
+        });
     }
 
     @Override

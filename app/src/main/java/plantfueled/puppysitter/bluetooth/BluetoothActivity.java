@@ -146,8 +146,9 @@ public abstract class BluetoothActivity extends AppCompatActivity implements Blu
                 serviceLoop:
                 for (BluetoothGattService service : services) {
                     for (BluetoothGattCharacteristic characteristic : service.getCharacteristics()) {
-                        if (characteristic.getUuid().toString().equals(SerialPortUUID)) {
+                        if (SerialPortUUID.equals(characteristic.getUuid().toString())) {
                             serialCharacteristic = characteristic;
+                            blunoGatt.setCharacteristicNotification(serialCharacteristic, true);
                             onBluetoothSuccess();
                             break serviceLoop;
                         }
@@ -157,6 +158,7 @@ public abstract class BluetoothActivity extends AppCompatActivity implements Blu
             else {
                 onError();
             }
+            rssiThread.start();
         }
         @Override
         public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
@@ -164,7 +166,6 @@ public abstract class BluetoothActivity extends AppCompatActivity implements Blu
                 currentState = BluetoothState.BLUETOOTH_CONNECTED;
                 Log.i(TAG, "Connected to GATT server.");
                 Log.i(TAG, "Attempting to start service discovery:" + blunoGatt.discoverServices());
-                rssiThread.start();
 
             }
             else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
@@ -176,6 +177,12 @@ public abstract class BluetoothActivity extends AppCompatActivity implements Blu
         public void onCharacteristicRead(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
             if (status == BluetoothGatt.GATT_SUCCESS) {
                 Log.i(TAG, characteristic.toString());
+            }
+        }
+        @Override
+        public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
+            if(SerialPortUUID.equals(characteristic.getUuid().toString())){
+                blunoGatt.readCharacteristic(characteristic);
             }
         }
         @Override
