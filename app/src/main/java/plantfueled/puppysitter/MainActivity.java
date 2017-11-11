@@ -1,16 +1,14 @@
 package plantfueled.puppysitter;
 
 import android.Manifest;
-import android.app.Activity;
+import android.bluetooth.BluetoothGattService;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.Toast;
-import android.content.SharedPreferences;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
@@ -18,9 +16,11 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
-public class MainActivity extends Activity {
+import java.util.List;
 
-    protected static final String TAG = "Main Activity";
+import plantfueled.puppysitter.bluetooth.BluetoothActivity;
+
+public class MainActivity extends BluetoothActivity {
 
     private PetSurface petSurface;
     private Pet pet;
@@ -30,7 +30,6 @@ public class MainActivity extends Activity {
     public final String TAG = "MainActivity";
     private static final int PERMISSION_FINE_LOCATION = 1;
 
-    BleService btService;
     protected ImageButton feedButton = null;
     protected ImageView bonetoFeed = null;
     protected Animation boneFeedAnimation = null;
@@ -58,9 +57,8 @@ public class MainActivity extends Activity {
         petSurface = (PetSurface) findViewById(R.id.main_pet_view);
         petSurface.setPet(pet);
         setupUI();
-    }
 
-        btService = new BleService(this, appContext);
+        bluetoothInit();
     }
 
     @Override
@@ -85,7 +83,8 @@ public class MainActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        btService.btCheck();
+        //btService.btCheck();
+        //btService.btCheck();
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
@@ -94,10 +93,11 @@ public class MainActivity extends Activity {
         return true;
     }
     @Override
-    public boolean onOptionsItemSelected(MenuItem item){
-        btService.scanLeDevice();
+    public boolean onOptionsItemSelected(MenuItem item) {
+        //btService.scanLeDevice();
         return super.onOptionsItemSelected(item);
-      
+    }
+
     protected void setupUI()
     {
         feedButton = (ImageButton) findViewById(R.id.feedButton);
