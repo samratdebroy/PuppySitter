@@ -12,7 +12,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -39,6 +38,10 @@ public class MainActivity extends BluetoothActivity {
     private Animation dogHopAnimation;
 
     private boolean isFar = false;
+
+    // Heart animation stuff
+    private ImageView heartImage;
+    private Animation heartAnimation;
 
     /// SET THIS TO TRUE IF YOU WANT ACTIONBAR TO DEBUG ///
     private final boolean isDebugMode = true;
@@ -139,6 +142,9 @@ public class MainActivity extends BluetoothActivity {
 
         dogImage = (ImageView) findViewById(R.id.img_puppy);
         dogHopAnimation = AnimationUtils.loadAnimation(this, R.anim.dog_hop);
+
+        heartImage = (ImageView) findViewById(R.id.img_heart);
+        heartAnimation = AnimationUtils.loadAnimation(this, R.anim.heart);
       
     }
 
@@ -203,10 +209,19 @@ public class MainActivity extends BluetoothActivity {
     public void onSoundReceived() {
         Log.i("WHAT IS LOVE", "BABY DON'T HURT ME");
         if(pet.love()){
+            // Play heart animation
+            playHeartAnimation();
+
             // Save pet state after it changed
             // TODO Maybe move saves to app exits only so it's not repreatedly called
             sharedPrefHelper.savePet(pet);
         }
 
+    }
+
+    private void playHeartAnimation() {
+        if(heartAnimation.hasEnded() || !heartAnimation.hasStarted()){
+            heartImage.startAnimation(heartAnimation);
+        }
     }
 }
