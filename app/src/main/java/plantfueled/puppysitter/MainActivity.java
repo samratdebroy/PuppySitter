@@ -1,26 +1,25 @@
 package plantfueled.puppysitter;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
-import android.content.SharedPreferences;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Toast;
 
-public class MainActivity extends Activity {
+import plantfueled.puppysitter.bluetooth.BluetoothActivity;
 
-    protected static final String TAG = "Main Activity";
+public class MainActivity extends BluetoothActivity {
 
     private PetSurface petSurface;
     private Pet pet;
@@ -30,7 +29,6 @@ public class MainActivity extends Activity {
     public final String TAG = "MainActivity";
     private static final int PERMISSION_FINE_LOCATION = 1;
 
-    BleService btService;
     protected ImageButton feedButton = null;
     protected ImageView bonetoFeed = null;
     protected Animation boneFeedAnimation = null;
@@ -39,6 +37,11 @@ public class MainActivity extends Activity {
 
     private ImageView dogImage;
     private Animation dogHopAnimation;
+
+    private boolean isFar = false;
+
+    /// SET THIS TO TRUE IF YOU WANT ACTIONBAR TO DEBUG ///
+    private final boolean isDebugMode = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,9 +61,14 @@ public class MainActivity extends Activity {
         petSurface = (PetSurface) findViewById(R.id.main_pet_view);
         petSurface.setPet(pet);
         setupUI();
-    }
+        setIsFar(); // set to far initially
 
-        btService = new BleService(this, appContext);
+        bluetoothInit();
+
+        if(!isDebugMode){
+            getSupportActionBar().hide();
+        }
+
     }
 
     @Override
@@ -85,7 +93,6 @@ public class MainActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        btService.btCheck();
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
@@ -94,10 +101,34 @@ public class MainActivity extends Activity {
         return true;
     }
     @Override
-    public boolean onOptionsItemSelected(MenuItem item){
-        btService.scanLeDevice();
-        return super.onOptionsItemSelected(item);
-      
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.isFarButton:
+                setIsFar();
+                return true;
+            case R.id.isNearButton:
+                setIsNear();
+                return true;
+            case R.id.StarveButton:
+                pet.setHungerLonelyTempLevel(1,-1,22);
+                return true;
+            case R.id.AbandonButton:
+                pet.setHungerLonelyTempLevel(-1,1,22);
+                return true;
+            case R.id.FreezeButton:
+                pet.setHungerLonelyTempLevel(-1,-1,-22);
+                return true;
+            case R.id.BurnButton:
+                pet.setHungerLonelyTempLevel(-1,-1,222);
+                return true;
+            case R.id.LoveButton:
+                onSoundReceived();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
     protected void setupUI()
     {
         feedButton = (ImageButton) findViewById(R.id.feedButton);
@@ -128,4 +159,54 @@ public class MainActivity extends Activity {
         }
     };
 
+    @Override
+    public void onBluetoothSuccess() {
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                // TODO what to do on success
+            }
+        });
+    }
+
+    @Override
+    public void onBluetoothFailure() {
+        // TODO what to do on failure
+    }
+
+    @Override
+    public void setIsNear(){
+        // If user is close to pet, show everything
+        if(isFar){
+            feedButton.setVisibility(View.VISIBLE);
+            feedButton.setEnabled(true);
+            dogImage.setVisibility(View.VISIBLE);
+            pet.show();
+            isFar = false;
+        }
+    };
+
+    @Override
+    public void setIsFar(){
+        // If user is too far from pet, hide everything
+        if(!isFar){
+            feedButton.setVisibility(View.INVISIBLE);
+            feedButton.setEnabled(false);
+            dogImage.setVisibility(View.INVISIBLE);
+            pet.hide();
+            isFar = true;
+        }
+    };
+
+    @Override
+    public void onSoundReceived() {
+        Log.i("WHAT IS LOVE", "BABY DON'T HURT ME");
+        if(pet.love()){
+            // Save pet state after it changed
+            // TODO Maybe move saves to app exits only so it's not repreatedly called
+            sharedPrefHelper.savePet(pet);
+        }
+
+    }
 }

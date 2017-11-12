@@ -1,4 +1,19 @@
 <resources>
     <string name="app_name">PuppySitter</string>
     <string name="feedButton">FeedButton</string>
+    <string name="cozy">COZY</string>
+    <string name="full">FULL</string>
+    <string name="happy">HAPPY</string>
+    <string name="temperature_status_icon">temperature status icon</string>
+    <string name="feed_button_image">feed button image</string>
+    <string name="hunger_status_icon">hunger status icon</string>
+    <string name="hunger_view_box">hunger view box</string>
+    <string name="lonely_status_box">lonely status box</string>
+    <string name="lonely_status_icon">lonely status icon</string>
+    <string name="puppy_image">puppy image</string>
+    <string name="temperature_status_box">temperature status box</string>
+    <string name="name_of_the_pet">Name of the pet</string>
+    <string name="the_name_of_the_pet">The Name of The Pet</string>
+    <string name="far">FAR</string>
+    <string name="test_me">Test me</string>
 </resources>

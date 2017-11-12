@@ -66,6 +66,28 @@ public class PetNotification {
             toast(text);
     };
 
+    public void temperatureChange(Pet.TemperatureStat stat, String petName){
+        CharSequence text = "";
+        switch (stat){
+
+            case COLD:
+                text = petName + " feels cold";
+                break;
+            case GOOD:
+                text = petName + " likes the temperature here";
+                break;
+            case HOT:
+                text = petName + " feels hot";
+                break;
+        }
+        if(text != "")
+            toast(text);
+    };
+
+    public void hide(){
+        toast("You need to move closer to your pet");
+    }
+
     private void toast(CharSequence textIn){
 
         final CharSequence text = textIn;

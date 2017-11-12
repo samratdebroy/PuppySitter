@@ -2,8 +2,38 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/optionButton"
-        android:title="Attempt Connection"
+        android:id="@+id/isNearButton"
+        android:title="Set is near"
+        app:showAsAction="never"
+        />
+    <item
+        android:id="@+id/isFarButton"
+        android:title="Set is far"
+        app:showAsAction="never"
+        />
+    <item
+        android:id="@+id/StarveButton"
+        android:title="Starve Pet"
+        app:showAsAction="never"
+        />
+    <item
+        android:id="@+id/AbandonButton"
+        android:title="Abandon Pet"
+        app:showAsAction="never"
+        />
+    <item
+        android:id="@+id/LoveButton"
+        android:title="Love Pet"
+        app:showAsAction="never"
+        />
+    <item
+        android:id="@+id/FreezeButton"
+        android:title="Freeze Pet"
+        app:showAsAction="never"
+        />
+    <item
+        android:id="@+id/BurnButton"
+        android:title="Burn Pet"
         app:showAsAction="never"
         />
 </menu>

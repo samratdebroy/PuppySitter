@@ -15,7 +15,9 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintVertical_bias="0.0" />
     <ImageButton
         android:id="@+id/feedButton"
         android:layout_width="91dp"
@@ -38,47 +40,210 @@
         app:srcCompat="@drawable/bone"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp" />
-                 
-    <TextView
-        android:id="@+id/distanceText"
-        android:layout_width="70dp"
-        android:layout_height="37dp"
-        android:text="FAR"
-        android:textAlignment="textStart"
-        android:textSize="24sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.026"
-        app:layout_constraintLeft_toLeftOf="@+id/main_pet_view"
-        app:layout_constraintRight_toRightOf="@+id/main_pet_view"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.017" />
+
     <ImageView
         android:id="@+id/img_puppy"
         android:layout_width="200dp"
         android:layout_height="200dp"
+        android:layout_marginBottom="96dp"
+        android:contentDescription="@string/puppy_image"
         android:scaleType="fitCenter"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:srcCompat="@drawable/puppy"
-        android:layout_marginBottom="96dp" />
+        app:srcCompat="@drawable/puppy" />
 
     <ImageView
         android:id="@+id/boneImageView"
         android:layout_width="247dp"
         android:layout_height="396dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="371dp"
         android:adjustViewBounds="false"
-        android:contentDescription=""
+        android:contentDescription="@string/feed_button_image"
         android:visibility="invisible"
         app:layout_constraintHorizontal_bias="0.504"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/bonetobefed"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp" />
-  
+        app:srcCompat="@drawable/bonetobefed" />
+
+    <ImageView
+        android:id="@+id/hungerViewBox"
+        android:layout_width="81dp"
+        android:layout_height="80dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:background="@android:color/holo_green_light"
+        android:contentDescription="@string/hunger_view_box"
+        android:scaleType="fitXY"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/temperatureViewBox"
+        app:layout_constraintTop_toTopOf="@+id/main_pet_view"
+        app:srcCompat="@drawable/statuscontainersmall"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintVertical_bias="0.382" />
+
+    <ImageView
+        android:id="@+id/hungerStatusIcon"
+        android:layout_width="64dp"
+        android:layout_height="66dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="0dp"
+        android:layout_marginTop="0dp"
+        android:contentDescription="@string/hunger_status_icon"
+        app:layout_constraintBottom_toBottomOf="@+id/hungerViewBox"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="@+id/hungerViewBox"
+        app:layout_constraintRight_toRightOf="@+id/hungerViewBox"
+        app:layout_constraintTop_toTopOf="@+id/hungerViewBox"
+        app:layout_constraintVertical_bias="0.0"
+        app:srcCompat="@drawable/hungerstatusicon" />
+
+    <TextView
+        android:id="@+id/hungerStatusText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="3dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/full"
+        android:textColor="@android:color/white"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/hungerViewBox"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintLeft_toLeftOf="@+id/hungerViewBox"
+        app:layout_constraintRight_toRightOf="@+id/hungerViewBox"
+        app:layout_constraintTop_toTopOf="@+id/hungerStatusIcon"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <ImageView
+        android:id="@+id/lonelyViewBox"
+        android:layout_width="81dp"
+        android:layout_height="80dp"
+        android:layout_marginBottom="0dp"
+        android:layout_marginRight="60dp"
+        android:layout_marginTop="0dp"
+        android:background="@android:color/holo_green_light"
+        android:contentDescription="@string/lonely_status_box"
+        android:scaleType="fitXY"
+        app:layout_constraintBottom_toBottomOf="@+id/temperatureViewBox"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/temperatureViewBox"
+        app:layout_constraintVertical_bias="1.0"
+        app:srcCompat="@drawable/statuscontainersmall" />
+
+    <ImageView
+        android:id="@+id/lonelyStatusIcon"
+        android:layout_width="67dp"
+        android:layout_height="60dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="0dp"
+        android:layout_marginTop="0dp"
+        android:contentDescription="@string/lonely_status_icon"
+        app:layout_constraintBottom_toBottomOf="@+id/lonelyViewBox"
+        app:layout_constraintLeft_toLeftOf="@+id/lonelyViewBox"
+        app:layout_constraintRight_toRightOf="@+id/lonelyViewBox"
+        app:layout_constraintTop_toTopOf="@+id/lonelyViewBox"
+        app:layout_constraintVertical_bias="0.0"
+        app:srcCompat="@drawable/lonelystatusicon" />
+
+    <TextView
+        android:id="@+id/lonelyStatusText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="3dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/happy"
+        android:textColor="@android:color/white"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/lonelyViewBox"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintLeft_toLeftOf="@+id/lonelyViewBox"
+        app:layout_constraintRight_toRightOf="@+id/lonelyViewBox"
+        app:layout_constraintTop_toTopOf="@+id/lonelyStatusIcon"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <ImageView
+        android:id="@+id/temperatureViewBox"
+        android:layout_width="81dp"
+        android:layout_height="80dp"
+        android:layout_marginBottom="0dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="0dp"
+        android:background="@android:color/holo_green_light"
+        android:contentDescription="@string/temperature_status_box"
+        android:scaleType="fitXY"
+        app:layout_constraintBottom_toBottomOf="@+id/hungerViewBox"
+        app:layout_constraintRight_toLeftOf="@+id/lonelyViewBox"
+        app:layout_constraintTop_toTopOf="@+id/hungerViewBox"
+        app:srcCompat="@drawable/statuscontainersmall"
+        tools:layout_editor_absoluteY="192dp" />
+
+    <ImageView
+        android:id="@+id/temperatureStatusIcon"
+        android:layout_width="53dp"
+        android:layout_height="51dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="6dp"
+        android:contentDescription="@string/temperature_status_icon"
+        android:scaleType="fitXY"
+        app:layout_constraintBottom_toBottomOf="@+id/temperatureStatusText"
+        app:layout_constraintLeft_toLeftOf="@+id/temperatureViewBox"
+        app:layout_constraintRight_toRightOf="@+id/temperatureViewBox"
+        app:layout_constraintTop_toTopOf="@+id/temperatureViewBox"
+        app:layout_constraintVertical_bias="0.0"
+        app:srcCompat="@drawable/tempgoodstatusicon" />
+
+    <TextView
+        android:id="@+id/temperatureStatusText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="3dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/cozy"
+        android:textColor="@android:color/white"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/temperatureViewBox"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintLeft_toLeftOf="@+id/temperatureViewBox"
+        app:layout_constraintRight_toRightOf="@+id/temperatureViewBox"
+        app:layout_constraintTop_toTopOf="@+id/temperatureViewBox"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <TextView
+        android:id="@+id/petNameText"
+        android:layout_width="259dp"
+        android:layout_height="29dp"
+        android:layout_marginBottom="3dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="0dp"
+        android:layout_marginTop="8dp"
+        android:contentDescription="@string/name_of_the_pet"
+        android:text="@string/the_name_of_the_pet"
+        android:textAlignment="center"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/temperatureViewBox"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintLeft_toLeftOf="@+id/hungerViewBox"
+        app:layout_constraintRight_toRightOf="@+id/lonelyViewBox"
+        app:layout_constraintTop_toTopOf="@+id/main_pet_view"
+        app:layout_constraintVertical_bias="1.0" />
+
 </android.support.constraint.ConstraintLayout>
