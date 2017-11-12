@@ -40,8 +40,8 @@ public class MainActivity extends BluetoothActivity {
 
     private boolean isFar = false;
 
-    // TODO Remove me
-    private Button testButton;
+    /// SET THIS TO TRUE IF YOU WANT ACTIONBAR TO DEBUG ///
+    private final boolean isDebugMode = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,15 +63,12 @@ public class MainActivity extends BluetoothActivity {
         setupUI();
         setIsFar(); // set to far initially
 
-        testButton = (Button) findViewById(R.id.bt_ble);
-        testButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dogImage.startAnimation(dogHopAnimation);
-            }
-        });
-
         bluetoothInit();
+
+        if(!isDebugMode){
+            getSupportActionBar().hide();
+        }
+
     }
 
     @Override
@@ -96,8 +93,6 @@ public class MainActivity extends BluetoothActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        //btService.btCheck();
-        //btService.btCheck();
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
@@ -113,6 +108,21 @@ public class MainActivity extends BluetoothActivity {
                 return true;
             case R.id.isNearButton:
                 setIsNear();
+                return true;
+            case R.id.StarveButton:
+                pet.setHungerLonelyTempLevel(1,-1,22);
+                return true;
+            case R.id.AbandonButton:
+                pet.setHungerLonelyTempLevel(-1,1,22);
+                return true;
+            case R.id.FreezeButton:
+                pet.setHungerLonelyTempLevel(-1,-1,-22);
+                return true;
+            case R.id.BurnButton:
+                pet.setHungerLonelyTempLevel(-1,-1,222);
+                return true;
+            case R.id.LoveButton:
+                onSoundReceived();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -155,14 +165,14 @@ public class MainActivity extends BluetoothActivity {
         handler.post(new Runnable() {
             @Override
             public void run() {
-                testButton.setEnabled(true);
+                // TODO what to do on success
             }
         });
     }
 
     @Override
     public void onBluetoothFailure() {
-
+        // TODO what to do on failure
     }
 
     @Override
@@ -192,6 +202,11 @@ public class MainActivity extends BluetoothActivity {
     @Override
     public void onSoundReceived() {
         Log.i("WHAT IS LOVE", "BABY DON'T HURT ME");
-        pet.love();
+        if(pet.love()){
+            // Save pet state after it changed
+            // TODO Maybe move saves to app exits only so it's not repreatedly called
+            sharedPrefHelper.savePet(pet);
+        }
+
     }
 }

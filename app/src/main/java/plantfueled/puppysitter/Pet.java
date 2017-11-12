@@ -13,13 +13,17 @@ public class Pet {
     private String petName = "noName"; // name of pet
 
     private float hungerLevel = 50;
-    private float lonelyLevel = 100;
+    private float lonelyLevel = 90;
     private float temperatureLevel = 22;
     private boolean isHidden = false;
 
     private Date lastPetUpdate;
     private PetNotification petNotification;
     private PetStatusUI petStatusUI;
+
+    private  HungerStat lastHungerStat;
+    private  LonelyStat lastLonelyStat;
+    private  TemperatureStat lastTempStat;
 
     final float HUNGER_RATE = 10f; // points per minute lost
     final float LONELY_RATE = 15; // points per minute lost
@@ -67,6 +71,11 @@ public class Pet {
         lastPetUpdate = Calendar.getInstance().getTime();
         petNotification = new PetNotification(context);
         petStatusUI = new PetStatusUI(context,getHungerStatus(),getLonelyStatus(),getTemperatureStatus(),name);
+
+        // Set current states
+        lastHungerStat = getHungerStatus();
+        lastLonelyStat = getLonelyStatus();
+        lastTempStat = getTemperatureStatus();
     }
 
     public Pet(String name, Context context, float hungerLevel, float lonelyLevel){
@@ -82,15 +91,11 @@ public class Pet {
         // update the stats according to how many minutes have passed when visible
         if(minutesPassed >= 1 && !isHidden){
 
-            // Cache current Pet Stats
-            HungerStat lastHungerStat = getHungerStatus();
-            LonelyStat lastLonelyStat = getLonelyStatus();
-
             hungerLevel = Math.max(0, hungerLevel - minutesPassed/HUNGER_RATE);
             lonelyLevel = Math.max(0, lonelyLevel - minutesPassed/LONELY_RATE);
             lastPetUpdate = Calendar.getInstance().getTime();
 
-            checkStatusChange(lastHungerStat,lastLonelyStat);
+            checkStatusChange();
         }
 
     }
@@ -103,7 +108,7 @@ public class Pet {
         }
         else{
             hungerLevel = Math.min(hungerLevel+hungerRemoved,HungerStat.FULL.level);
-            petNotification.hungerChange(getHungerStatus(), petName);
+            checkStatusChange();
             return true;
         }
     }
@@ -128,7 +133,7 @@ public class Pet {
         }
         else{
             lonelyLevel = Math.min(lonelyLevel+lonelyAdded, LonelyStat.FULL.level);
-            petNotification.lonelyChange(getLonelyStatus(), petName);
+            checkStatusChange();
             return true;
         }
     }
@@ -153,13 +158,14 @@ public class Pet {
             return TemperatureStat.GOOD;
     }
 
-    public void checkStatusChange(HungerStat lastHungerStat, LonelyStat lastLonelyStat){
+    public void checkStatusChange(){
 
         // Check for Hunger Status Change
         if(lastHungerStat != getHungerStatus()){
             lastHungerStat = getHungerStatus();
             petNotification.hungerChange(lastHungerStat, petName);
             petStatusUI.hungerChange(lastHungerStat);
+            lastHungerStat = getHungerStatus();
         }
 
         // Check for Loneliness Status Change
@@ -167,7 +173,9 @@ public class Pet {
             lastLonelyStat = getLonelyStatus();
             petNotification.lonelyChange(lastLonelyStat, petName);
             petStatusUI.lonelyChange(lastLonelyStat);
+            lastLonelyStat = getLonelyStatus();
         }
+
     }
 
     public void hide(){
@@ -192,4 +200,19 @@ public class Pet {
     public float getHungerLevel() {return hungerLevel;}
     public float getLonelyLevel() {return lonelyLevel;}
     public PetNotification getNotification() {return petNotification;}
+
+    // ONLY FOR DEBUGGING
+    public void setHungerLonelyTempLevel(float hungerLvl, float lonelyLvl, float temp) {
+
+        if(hungerLvl >= 0 && hungerLvl <= HungerStat.FULL.level)
+            hungerLevel = hungerLvl;
+
+        if(lonelyLvl >= 0 && lonelyLvl <= LonelyStat.FULL.level)
+            lonelyLevel = lonelyLvl;
+
+        temperatureLevel = temp;
+
+        checkStatusChange();
+    }
+
 }

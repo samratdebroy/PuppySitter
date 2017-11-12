@@ -107,7 +107,7 @@ public class PetStatusUI{
                     case ABANDONED:
                         lonelyBox.setBackgroundColor(badStatusColor);
                         lonelyText.setTextColor(badStatusColor);
-                        lonelyText.setText("ABANDONED");
+                        lonelyText.setText("ALONE");
                         break;
                     case LONELY:
                         lonelyBox.setBackgroundColor(Color.YELLOW);
@@ -177,10 +177,10 @@ public class PetStatusUI{
     }
 
     public void showUI(Pet.HungerStat hungerStat, Pet.LonelyStat lonelyStat, Pet.TemperatureStat temperatureStat){
+        checkStates(hungerStat,lonelyStat,temperatureStat);
         for(View view : viewList){
             view.setVisibility(View.VISIBLE);
         }
-        checkStates(hungerStat,lonelyStat,temperatureStat);
     }
 
     private void checkStates(Pet.HungerStat hungerStat, Pet.LonelyStat lonelyStat, Pet.TemperatureStat temperatureStat){

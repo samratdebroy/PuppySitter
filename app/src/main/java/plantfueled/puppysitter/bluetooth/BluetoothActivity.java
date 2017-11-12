@@ -39,8 +39,6 @@ public abstract class BluetoothActivity extends AppCompatActivity implements Blu
     private static final String DEVICE_NAME = "Puppyboard";
     private static final int REQUEST_ENABLE_BT = 1337;
 
-    private TextView distanceText;
-
     private Handler scanHandler;
 
     private BluetoothState currentState = BluetoothState.BLUETOOTH_DISABLED;
@@ -61,7 +59,6 @@ public abstract class BluetoothActivity extends AppCompatActivity implements Blu
 
     public void bluetoothInit() {
         scanHandler = new Handler();
-        setupUI();
 
         // Get bluetooth adapter
         bluetoothAdapter = ((BluetoothManager)getSystemService(Context.BLUETOOTH_SERVICE)).getAdapter();
@@ -86,10 +83,6 @@ public abstract class BluetoothActivity extends AppCompatActivity implements Blu
     private void onError() {
         // TODO disconnect EVERYTHING
         currentState = BluetoothState.BLUETOOTH_DISABLED;
-    }
-
-    private void setupUI() {
-        distanceText = (TextView) findViewById(R.id.distanceText);
     }
 
     @Override
