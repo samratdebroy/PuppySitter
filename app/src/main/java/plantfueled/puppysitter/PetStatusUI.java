@@ -5,12 +5,16 @@ import android.content.ContextWrapper;
 import android.graphics.Color;
 import android.os.Handler;
 import android.os.Looper;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import java.util.ArrayList;
 
 public class PetStatusUI{
 
     private Activity activity;
+    private ArrayList<View> viewList;
 
     private ImageView hungerBox = null;
     private ImageView lonelyBox = null;
@@ -30,25 +34,34 @@ public class PetStatusUI{
     public PetStatusUI(Context context, Pet.HungerStat hungerStat, Pet.LonelyStat lonelyStat, Pet.TemperatureStat temperatureStat,String petName){
 
         this.activity = getActivity(context);
+        viewList = new ArrayList<View>();
 
         // Init all UI
         hungerBox = (ImageView)  activity.findViewById(R.id.hungerViewBox);
+        viewList.add(hungerBox);
         lonelyBox = (ImageView)  activity.findViewById(R.id.lonelyViewBox);
+        viewList.add(lonelyBox);
         temperatureBox = (ImageView)  activity.findViewById(R.id.temperatureViewBox);
+        viewList.add(temperatureBox);
 
         hungerIcon = (ImageView)  activity.findViewById(R.id.hungerStatusIcon);
+        viewList.add(hungerIcon);
         lonelyIcon = (ImageView)  activity.findViewById(R.id.lonelyStatusIcon);
+        viewList.add(lonelyIcon);
         temperatureIcon = (ImageView)  activity.findViewById(R.id.temperatureStatusIcon);
+        viewList.add(temperatureIcon);
 
         hungerText = (TextView)  activity.findViewById(R.id.hungerStatusText);
+        viewList.add(hungerText);
         lonelyText = (TextView)  activity.findViewById(R.id.lonelyStatusText);
+        viewList.add(lonelyText);
         temperatureText = (TextView)  activity.findViewById(R.id.temperatureStatusText);
+        viewList.add(temperatureText);
         petNameText = (TextView)  activity.findViewById(R.id.petNameText);
+        viewList.add(petNameText);
 
         // Set up UI for current Pet State
-        hungerChange(hungerStat);
-        lonelyChange(lonelyStat);
-        temperatureChange(temperatureStat);
+        checkStates(hungerStat,lonelyStat,temperatureStat);
         changePetName(petName);
     }
 
@@ -155,6 +168,25 @@ public class PetStatusUI{
                petNameText.setText(petName);
             }
         });
+    }
+
+    public void hideUI(){
+        for(View view : viewList){
+            view.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    public void showUI(Pet.HungerStat hungerStat, Pet.LonelyStat lonelyStat, Pet.TemperatureStat temperatureStat){
+        for(View view : viewList){
+            view.setVisibility(View.VISIBLE);
+        }
+        checkStates(hungerStat,lonelyStat,temperatureStat);
+    }
+
+    private void checkStates(Pet.HungerStat hungerStat, Pet.LonelyStat lonelyStat, Pet.TemperatureStat temperatureStat){
+        hungerChange(hungerStat);
+        lonelyChange(lonelyStat);
+        temperatureChange(temperatureStat);
     }
 
     public Activity getActivity(Context context)

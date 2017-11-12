@@ -15,6 +15,7 @@ public class Pet {
     private float hungerLevel = 50;
     private float lonelyLevel = 100;
     private float temperatureLevel = 22;
+    private boolean isHidden = false;
 
     private Date lastPetUpdate;
     private PetNotification petNotification;
@@ -78,8 +79,8 @@ public class Pet {
     public void updatePetStats(){
         int minutesPassed = (int)(Calendar.getInstance().getTime().getTime() - lastPetUpdate.getTime())/1000/60;
 
-        // update the stats according to how many minutes have passed
-        if(minutesPassed >= 1){
+        // update the stats according to how many minutes have passed when visible
+        if(minutesPassed >= 1 && !isHidden){
 
             // Cache current Pet Stats
             HungerStat lastHungerStat = getHungerStatus();
@@ -101,7 +102,7 @@ public class Pet {
             return false;
         }
         else{
-            hungerLevel = Math.min(hungerLevel+hungerRemoved,100);
+            hungerLevel = Math.min(hungerLevel+hungerRemoved,HungerStat.FULL.level);
             petNotification.hungerChange(getHungerStatus(), petName);
             return true;
         }
@@ -126,7 +127,6 @@ public class Pet {
             return false;
         }
         else{
-            //hungerLevel = Math.min(hungerLevel+hungerRemoved,100);
             lonelyLevel = Math.min(lonelyLevel+lonelyAdded, LonelyStat.FULL.level);
             petNotification.lonelyChange(getLonelyStatus(), petName);
             return true;
@@ -167,6 +167,21 @@ public class Pet {
             lastLonelyStat = getLonelyStatus();
             petNotification.lonelyChange(lastLonelyStat, petName);
             petStatusUI.lonelyChange(lastLonelyStat);
+        }
+    }
+
+    public void hide(){
+        if(!isHidden){
+            petStatusUI.hideUI();
+            petNotification.hide();
+            isHidden = true;
+        }
+    }
+
+    public void show(){
+        if(isHidden){
+            petStatusUI.showUI(getHungerStatus(),getLonelyStatus(),getTemperatureStatus());
+            isHidden = false;
         }
     }
 

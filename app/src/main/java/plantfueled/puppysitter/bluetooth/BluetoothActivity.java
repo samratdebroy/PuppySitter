@@ -204,18 +204,14 @@ public abstract class BluetoothActivity extends AppCompatActivity implements Blu
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        distanceText.setText("NEAR");
+                        setIsNear();
                     }
                 });
-
             }
             else{
                 handler.post(new Runnable() {
                     @Override
-                    public void run() {
-                        distanceText.setText("FAR");
-                    }
-                });
+                    public void run() { setIsFar();}});
             }
         }
     }
@@ -239,5 +235,7 @@ public abstract class BluetoothActivity extends AppCompatActivity implements Blu
     public abstract void onBluetoothSuccess();
     public abstract void onSoundReceived();
     public abstract void onBluetoothFailure();
+    public abstract void setIsNear();
+    public abstract void setIsFar();
 
 }

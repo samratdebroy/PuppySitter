@@ -2,8 +2,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/optionButton"
-        android:title="Attempt Connection"
+        android:id="@+id/isNearButton"
+        android:title="Set is near"
+        app:showAsAction="never"
+        />
+    <item
+        android:id="@+id/isFarButton"
+        android:title="Set is far"
         app:showAsAction="never"
         />
 </menu>

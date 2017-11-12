@@ -38,6 +38,8 @@ public class MainActivity extends BluetoothActivity {
     private ImageView dogImage;
     private Animation dogHopAnimation;
 
+    private boolean isFar = false;
+
     // TODO Remove me
     private Button testButton;
 
@@ -59,6 +61,7 @@ public class MainActivity extends BluetoothActivity {
         petSurface = (PetSurface) findViewById(R.id.main_pet_view);
         petSurface.setPet(pet);
         setupUI();
+        setIsFar(); // set to far initially
 
         testButton = (Button) findViewById(R.id.bt_ble);
         testButton.setOnClickListener(new View.OnClickListener() {
@@ -104,8 +107,16 @@ public class MainActivity extends BluetoothActivity {
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        //btService.scanLeDevice();
-        return super.onOptionsItemSelected(item);
+        switch (item.getItemId()){
+            case R.id.isFarButton:
+                setIsFar();
+                return true;
+            case R.id.isNearButton:
+                setIsNear();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     protected void setupUI()
@@ -153,6 +164,30 @@ public class MainActivity extends BluetoothActivity {
     public void onBluetoothFailure() {
 
     }
+
+    @Override
+    public void setIsNear(){
+        // If user is close to pet, show everything
+        if(isFar){
+            feedButton.setVisibility(View.VISIBLE);
+            feedButton.setEnabled(true);
+            dogImage.setVisibility(View.VISIBLE);
+            pet.show();
+            isFar = false;
+        }
+    };
+
+    @Override
+    public void setIsFar(){
+        // If user is too far from pet, hide everything
+        if(!isFar){
+            feedButton.setVisibility(View.INVISIBLE);
+            feedButton.setEnabled(false);
+            dogImage.setVisibility(View.INVISIBLE);
+            pet.hide();
+            isFar = true;
+        }
+    };
 
     @Override
     public void onSoundReceived() {
