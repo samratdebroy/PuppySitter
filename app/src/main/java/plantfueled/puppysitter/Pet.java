@@ -25,8 +25,8 @@ public class Pet {
     private  LonelyStat lastLonelyStat;
     private  TemperatureStat lastTempStat;
 
-    final float HUNGER_RATE = 10f; // points per minute lost
-    final float LONELY_RATE = 15; // points per minute lost
+    public static final float HUNGER_RATE = 10f; // points per minute lost
+    public static final float LONELY_RATE = 15; // points per minute lost
 
     public enum HungerStat{
         STARVING(5),
@@ -114,6 +114,11 @@ public class Pet {
     }
     public boolean feed(){return  feed(30);} // Default value for feed() param
 
+    public void starve(int hungerIncreased) {
+        hungerLevel = Math.max(hungerLevel-hungerIncreased, HungerStat.STARVING.level);
+        checkStatusChange();
+    }
+
     public HungerStat getHungerStatus(){
         if(hungerLevel < HungerStat.STARVING.level)
             return HungerStat.STARVING;
@@ -136,6 +141,11 @@ public class Pet {
             checkStatusChange();
             return true;
         }
+    }
+
+    public void hate(int lonelyRemoved) {
+        lonelyLevel = Math.max(lonelyLevel-lonelyRemoved, LonelyStat.ABANDONED.level);
+        checkStatusChange();
     }
 
     public LonelyStat getLonelyStatus(){

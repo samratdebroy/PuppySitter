@@ -42,7 +42,10 @@ public class SharedPreferenceHelper {
 
         Pet pet = new Pet(petName, context, petHunger, petLonely);
 
-        // TODO update pet hunger and lonely to reflect the time that has passed since the pet was last saved
+        // Update pet hunger and lonely to reflect the time that has passed since the pet was last saved
+        float minutesPassed = lastSaveTime / 60000.0f;
+        pet.starve((int)(minutesPassed * Pet.HUNGER_RATE));
+        pet.hate((int)(minutesPassed * Pet.LONELY_RATE));
 
         return pet;
     }
