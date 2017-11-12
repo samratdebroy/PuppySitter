@@ -1,21 +1,33 @@
 package plantfueled.puppysitter;
 
-import android.content.SharedPreferences;
-import android.support.v7.app.AppCompatActivity;
+import android.Manifest;
+import android.content.Context;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity {
+import plantfueled.puppysitter.bluetooth.BluetoothActivity;
 
-    protected static final String TAG = "Main Activity";
+public class MainActivity extends BluetoothActivity {
 
     private PetSurface petSurface;
     private Pet pet;
+
+    private Context appContext;
+
+    public final String TAG = "MainActivity";
+    private static final int PERMISSION_FINE_LOCATION = 1;
 
     protected ImageButton feedButton = null;
     protected ImageView bonetoFeed = null;
@@ -26,10 +38,16 @@ public class MainActivity extends AppCompatActivity {
     private ImageView dogImage;
     private Animation dogHopAnimation;
 
+    // TODO Remove me
+    private Button testButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        appContext = getApplicationContext();
+        requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_FINE_LOCATION);
 
         // Load pet
         sharedPrefHelper = new SharedPreferenceHelper(MainActivity.this);
@@ -41,6 +59,53 @@ public class MainActivity extends AppCompatActivity {
         petSurface = (PetSurface) findViewById(R.id.main_pet_view);
         petSurface.setPet(pet);
         setupUI();
+
+        testButton = (Button) findViewById(R.id.bt_ble);
+        testButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dogImage.startAnimation(dogHopAnimation);
+            }
+        });
+
+        bluetoothInit();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case PERMISSION_FINE_LOCATION: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+
+                } else {
+
+                   Toast.makeText(appContext, "You need to allow location permissions", Toast.LENGTH_SHORT);
+                }
+                return;
+            }
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //btService.btCheck();
+        //btService.btCheck();
+    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        //btService.scanLeDevice();
+        return super.onOptionsItemSelected(item);
     }
 
     protected void setupUI()
@@ -53,6 +118,7 @@ public class MainActivity extends AppCompatActivity {
 
         dogImage = (ImageView) findViewById(R.id.img_puppy);
         dogHopAnimation = AnimationUtils.loadAnimation(this, R.anim.dog_hop);
+      
     }
 
     private ImageButton.OnClickListener onClickFeedButton = new ImageButton.OnClickListener(){
@@ -72,4 +138,25 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
+    @Override
+    public void onBluetoothSuccess() {
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                testButton.setEnabled(true);
+            }
+        });
+    }
+
+    @Override
+    public void onBluetoothFailure() {
+
+    }
+
+    @Override
+    public void onSoundReceived() {
+        Log.i("WHAT IS LOVE", "BABY DON'T HURT ME");
+        pet.love();
+    }
 }
