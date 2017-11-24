@@ -8,8 +8,6 @@ import java.util.Date;
 
 public class Pet {
 
-    private static int petCounter = 0;   // Static ID increments with every new pet created
-    private int petID = 0;
     private String petName = "noName"; // name of pet
 
     private float hungerLevel = 90;
@@ -69,8 +67,6 @@ public class Pet {
     /// Constructor
     public Pet(String name, Context context){
         petName = name;
-        petCounter++;
-        petID = petCounter;
         lastPetUpdate = Calendar.getInstance().getTime();
         lastPetTempUpdate = Calendar.getInstance().getTime();
         petNotification = new PetNotification(context);
@@ -87,6 +83,31 @@ public class Pet {
         this(name, context);
         this.hungerLevel = hungerLevel;
         this.lonelyLevel = lonelyLevel;
+    }
+
+    // Restore pet saved state from memento
+    public Pet(Context context, PetMemento memento){
+        this(memento.getPetName(),context);
+
+        hungerLevel = memento.getHungerLevel();
+        lonelyLevel = memento.getLonelyLevel();
+        temperatureLevel = memento.getTemperatureLevel();
+
+        // Set current states
+        lastHungerStat = getHungerStatus();
+        lastLonelyStat = getLonelyStatus();
+        lastTempStat = getTemperatureStatus();
+        points = memento.getPoints();
+        addPoints(0); // Just to force a UI update with current points amount displayed
+
+        lastPetTempUpdate = memento.getLastPetTempUpdate();
+        lastPetUpdate = memento.getLastPetUpdate();
+
+        checkStatusChange();
+    };
+
+    public PetMemento saveState(){
+        return new PetMemento(petName,hungerLevel,lonelyLevel,temperatureLevel,lastPetUpdate,lastPetTempUpdate,points);
     }
 
     // Lower stats with time passed
@@ -120,11 +141,6 @@ public class Pet {
     }
     public boolean feed(){return  feed(30);} // Default value for feed() param
 
-    public void starve(int hungerIncreased) {
-        hungerLevel = Math.max(hungerLevel-hungerIncreased, HungerStat.STARVING.level);
-        checkStatusChange();
-    }
-
     public HungerStat getHungerStatus(){
         if(hungerLevel < HungerStat.STARVING.level)
             return HungerStat.STARVING;
@@ -148,11 +164,6 @@ public class Pet {
             checkStatusChange();
             return true;
         }
-    }
-
-    public void hate(int lonelyRemoved) {
-        lonelyLevel = Math.max(lonelyLevel-lonelyRemoved, LonelyStat.ABANDONED.level);
-        checkStatusChange();
     }
 
     public LonelyStat getLonelyStatus(){
@@ -253,20 +264,14 @@ public class Pet {
     }
 
     //*****GETTERS & SETTERS*****//
-    public int getPetID() {return petID;}
     public String getPetName() {return petName;}
     public void setPetName(String petName) {this.petName = petName;}
-    public float getHungerLevel() {return hungerLevel;}
-    public float getLonelyLevel() {return lonelyLevel;}
     public PetNotification getNotification() {return petNotification;}
-    public int getPoints(){return points;}
-    public void setPoints(int points){this.points = points;}
 
     public void setTemperatureLevel(float currTemp) {
         temperatureLevel = currTemp;
         checkTempChange();
     }
-
 
     // ONLY FOR DEBUGGING
     public void setHungerLonelyTempLevel(float hungerLvl, float lonelyLvl, float temp) {
