@@ -8,22 +8,23 @@ import java.util.Date;
 
 public class Pet {
 
-    private static int petCounter = 0;   // Static ID increments with every new pet created
-    private int petID = 0;
     private String petName = "noName"; // name of pet
 
-    private float hungerLevel = 50;
+    private float hungerLevel = 90;
     private float lonelyLevel = 90;
     private float temperatureLevel = 22;
     private boolean isHidden = false;
 
     private Date lastPetUpdate;
+    private Date lastPetTempUpdate;
     private PetNotification petNotification;
     private PetStatusUI petStatusUI;
 
     private  HungerStat lastHungerStat;
     private  LonelyStat lastLonelyStat;
     private  TemperatureStat lastTempStat;
+
+    private int points = 0;
 
     public static final float HUNGER_RATE = 10f; // points per minute lost
     public static final float LONELY_RATE = 15; // points per minute lost
@@ -66,9 +67,8 @@ public class Pet {
     /// Constructor
     public Pet(String name, Context context){
         petName = name;
-        petCounter++;
-        petID = petCounter;
         lastPetUpdate = Calendar.getInstance().getTime();
+        lastPetTempUpdate = Calendar.getInstance().getTime();
         petNotification = new PetNotification(context);
         petStatusUI = new PetStatusUI(context,getHungerStatus(),getLonelyStatus(),getTemperatureStatus(),name);
 
@@ -76,12 +76,38 @@ public class Pet {
         lastHungerStat = getHungerStatus();
         lastLonelyStat = getLonelyStatus();
         lastTempStat = getTemperatureStatus();
+        addPoints(0); // Just to force a UI update with current points amount displayed
     }
 
     public Pet(String name, Context context, float hungerLevel, float lonelyLevel){
         this(name, context);
         this.hungerLevel = hungerLevel;
         this.lonelyLevel = lonelyLevel;
+    }
+
+    // Restore pet saved state from memento
+    public Pet(Context context, PetMemento memento){
+        this(memento.getPetName(),context);
+
+        hungerLevel = memento.getHungerLevel();
+        lonelyLevel = memento.getLonelyLevel();
+        temperatureLevel = memento.getTemperatureLevel();
+
+        // Set current states
+        lastHungerStat = getHungerStatus();
+        lastLonelyStat = getLonelyStatus();
+        lastTempStat = getTemperatureStatus();
+        points = memento.getPoints();
+        addPoints(0); // Just to force a UI update with current points amount displayed
+
+        lastPetTempUpdate = memento.getLastPetTempUpdate();
+        lastPetUpdate = memento.getLastPetUpdate();
+
+        checkStatusChange();
+    };
+
+    public PetMemento saveState(){
+        return new PetMemento(petName,hungerLevel,lonelyLevel,temperatureLevel,lastPetUpdate,lastPetTempUpdate,points);
     }
 
     // Lower stats with time passed
@@ -108,16 +134,12 @@ public class Pet {
         }
         else{
             hungerLevel = Math.min(hungerLevel+hungerRemoved,HungerStat.FULL.level);
+            addPoints(6);
             checkStatusChange();
             return true;
         }
     }
     public boolean feed(){return  feed(30);} // Default value for feed() param
-
-    public void starve(int hungerIncreased) {
-        hungerLevel = Math.max(hungerLevel-hungerIncreased, HungerStat.STARVING.level);
-        checkStatusChange();
-    }
 
     public HungerStat getHungerStatus(){
         if(hungerLevel < HungerStat.STARVING.level)
@@ -138,14 +160,10 @@ public class Pet {
         }
         else{
             lonelyLevel = Math.min(lonelyLevel+lonelyAdded, LonelyStat.FULL.level);
+            addPoints(1);
             checkStatusChange();
             return true;
         }
-    }
-
-    public void hate(int lonelyRemoved) {
-        lonelyLevel = Math.max(lonelyLevel-lonelyRemoved, LonelyStat.ABANDONED.level);
-        checkStatusChange();
     }
 
     public LonelyStat getLonelyStatus(){
@@ -169,7 +187,12 @@ public class Pet {
     }
 
     public void checkStatusChange(){
+        checkHungerChange();
+        checkLonelinessChange();
+        checkTempChange();
+    }
 
+    private void checkHungerChange(){
         // Check for Hunger Status Change
         if(lastHungerStat != getHungerStatus()){
             lastHungerStat = getHungerStatus();
@@ -177,7 +200,9 @@ public class Pet {
             petStatusUI.hungerChange(lastHungerStat);
             lastHungerStat = getHungerStatus();
         }
+    }
 
+    private void checkLonelinessChange(){
         // Check for Loneliness Status Change
         if(lastLonelyStat != getLonelyStatus()){
             lastLonelyStat = getLonelyStatus();
@@ -185,7 +210,42 @@ public class Pet {
             petStatusUI.lonelyChange(lastLonelyStat);
             lastLonelyStat = getLonelyStatus();
         }
+    }
 
+    private void checkTempChange(){
+
+        // Award points if enough time has passed in good status
+        checkHowLongPetComfortable();
+
+        // If pet isn't comfortable, don't accumulate time to award points
+        if(getTemperatureStatus() != TemperatureStat.GOOD)
+            lastPetTempUpdate = Calendar.getInstance().getTime();
+
+        // Check for Temperature Status Change
+        if(lastTempStat != getTemperatureStatus()){
+            lastTempStat = getTemperatureStatus();
+            petNotification.temperatureChange(lastTempStat, petName);
+            petStatusUI.temperatureChange(lastTempStat);
+            lastTempStat = getTemperatureStatus(); // TODO IS THERE ANY REASON I SET THIS TWICE??
+        }
+    }
+
+    private void checkHowLongPetComfortable(){
+        int minutesPassed = (int)(Calendar.getInstance().getTime().getTime() - lastPetTempUpdate.getTime())/1000/60;
+
+        // give points for every hour spent in "Good" temperature conditions
+        // Note: Only checks last time app was open and now
+        // doesn't know if pet was uncomfortable when app was closed...
+        if(minutesPassed > 60){
+            int pointsAwarded = minutesPassed/60;
+            addPoints(pointsAwarded);
+            lastPetTempUpdate = Calendar.getInstance().getTime();
+        }
+    }
+
+    private void addPoints(int amountAdded){
+        points += amountAdded;
+        petStatusUI.setPoints(points);
     }
 
     public void hide(){
@@ -204,12 +264,14 @@ public class Pet {
     }
 
     //*****GETTERS & SETTERS*****//
-    public int getPetID() {return petID;}
     public String getPetName() {return petName;}
     public void setPetName(String petName) {this.petName = petName;}
-    public float getHungerLevel() {return hungerLevel;}
-    public float getLonelyLevel() {return lonelyLevel;}
     public PetNotification getNotification() {return petNotification;}
+
+    public void setTemperatureLevel(float currTemp) {
+        temperatureLevel = currTemp;
+        checkTempChange();
+    }
 
     // ONLY FOR DEBUGGING
     public void setHungerLonelyTempLevel(float hungerLvl, float lonelyLvl, float temp) {

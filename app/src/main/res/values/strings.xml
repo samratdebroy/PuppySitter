@@ -16,4 +16,6 @@
     <string name="the_name_of_the_pet">The Name of The Pet</string>
     <string name="far">FAR</string>
     <string name="test_me">Test me</string>
+    <string name="_00000">00000</string>
+    <string name="point_score">Point Score</string>
 </resources>

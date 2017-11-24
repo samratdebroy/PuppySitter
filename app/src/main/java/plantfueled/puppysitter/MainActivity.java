@@ -127,6 +127,9 @@ public class MainActivity extends BluetoothActivity {
             case R.id.LoveButton:
                 onSoundReceived();
                 return true;
+            case R.id.TempGOODButton:
+                pet.setHungerLonelyTempLevel(-1,-1,22);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
