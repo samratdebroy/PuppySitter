@@ -169,7 +169,12 @@ public class Pet {
     }
 
     public void checkStatusChange(){
+        checkHungerChange();
+        checkLonelinessChange();
+        checkTempChange();
+    }
 
+    private void checkHungerChange(){
         // Check for Hunger Status Change
         if(lastHungerStat != getHungerStatus()){
             lastHungerStat = getHungerStatus();
@@ -177,7 +182,9 @@ public class Pet {
             petStatusUI.hungerChange(lastHungerStat);
             lastHungerStat = getHungerStatus();
         }
+    }
 
+    private void checkLonelinessChange(){
         // Check for Loneliness Status Change
         if(lastLonelyStat != getLonelyStatus()){
             lastLonelyStat = getLonelyStatus();
@@ -185,15 +192,16 @@ public class Pet {
             petStatusUI.lonelyChange(lastLonelyStat);
             lastLonelyStat = getLonelyStatus();
         }
+    }
 
+    private void checkTempChange(){
         // Check for Temperature Status Change
         if(lastTempStat != getTemperatureStatus()){
             lastTempStat = getTemperatureStatus();
             petNotification.temperatureChange(lastTempStat, petName);
             petStatusUI.temperatureChange(lastTempStat);
-            lastTempStat = getTemperatureStatus();
+            lastTempStat = getTemperatureStatus(); // TODO IS THERE ANY REASON I SET THIS TWICE??
         }
-
     }
 
     public void hide(){
@@ -218,6 +226,12 @@ public class Pet {
     public float getHungerLevel() {return hungerLevel;}
     public float getLonelyLevel() {return lonelyLevel;}
     public PetNotification getNotification() {return petNotification;}
+
+    public void setTemperatureLevel(float currTemp) {
+        temperatureLevel = currTemp;
+        checkTempChange();
+    }
+
 
     // ONLY FOR DEBUGGING
     public void setHungerLonelyTempLevel(float hungerLvl, float lonelyLvl, float temp) {
