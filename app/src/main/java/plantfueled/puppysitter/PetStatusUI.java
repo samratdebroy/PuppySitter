@@ -28,6 +28,7 @@ public class PetStatusUI{
     private TextView lonelyText = null;
     private TextView temperatureText = null;
     private TextView petNameText = null;
+    private TextView pointsText = null;
 
     private final int badStatusColor = Color.rgb(255,140,0);
 
@@ -59,6 +60,9 @@ public class PetStatusUI{
         viewList.add(temperatureText);
         petNameText = (TextView)  activity.findViewById(R.id.petNameText);
         viewList.add(petNameText);
+
+        pointsText = (TextView) activity.findViewById(R.id.pointsTextView);
+        // Note: We don't want to hide points when far from pet
 
         // Set up UI for current Pet State
         checkStates(hungerStat,lonelyStat,temperatureStat);
@@ -166,6 +170,17 @@ public class PetStatusUI{
             @Override
             public void run() {
                petNameText.setText(petName);
+            }
+        });
+    }
+
+    public void setPoints(final int points){
+        // Run on MainThread since it's UI
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+               pointsText.setText(String.format("%05d", points));
             }
         });
     }

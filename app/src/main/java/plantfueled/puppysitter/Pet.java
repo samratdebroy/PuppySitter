@@ -18,12 +18,15 @@ public class Pet {
     private boolean isHidden = false;
 
     private Date lastPetUpdate;
+    private Date lastPetTempUpdate;
     private PetNotification petNotification;
     private PetStatusUI petStatusUI;
 
     private  HungerStat lastHungerStat;
     private  LonelyStat lastLonelyStat;
     private  TemperatureStat lastTempStat;
+
+    private int points = 0;
 
     public static final float HUNGER_RATE = 10f; // points per minute lost
     public static final float LONELY_RATE = 15; // points per minute lost
@@ -69,6 +72,7 @@ public class Pet {
         petCounter++;
         petID = petCounter;
         lastPetUpdate = Calendar.getInstance().getTime();
+        lastPetTempUpdate = Calendar.getInstance().getTime();
         petNotification = new PetNotification(context);
         petStatusUI = new PetStatusUI(context,getHungerStatus(),getLonelyStatus(),getTemperatureStatus(),name);
 
@@ -76,6 +80,7 @@ public class Pet {
         lastHungerStat = getHungerStatus();
         lastLonelyStat = getLonelyStatus();
         lastTempStat = getTemperatureStatus();
+        addPoints(0); // Just to force a UI update with current points amount displayed
     }
 
     public Pet(String name, Context context, float hungerLevel, float lonelyLevel){
@@ -108,6 +113,7 @@ public class Pet {
         }
         else{
             hungerLevel = Math.min(hungerLevel+hungerRemoved,HungerStat.FULL.level);
+            addPoints(6);
             checkStatusChange();
             return true;
         }
@@ -138,6 +144,7 @@ public class Pet {
         }
         else{
             lonelyLevel = Math.min(lonelyLevel+lonelyAdded, LonelyStat.FULL.level);
+            addPoints(1);
             checkStatusChange();
             return true;
         }
@@ -195,6 +202,14 @@ public class Pet {
     }
 
     private void checkTempChange(){
+
+        // Award points if enough time has passed in good status
+        checkHowLongPetComfortable();
+
+        // If pet isn't comfortable, don't accumulate time to award points
+        if(getTemperatureStatus() != TemperatureStat.GOOD)
+            lastPetTempUpdate = Calendar.getInstance().getTime();
+
         // Check for Temperature Status Change
         if(lastTempStat != getTemperatureStatus()){
             lastTempStat = getTemperatureStatus();
@@ -202,6 +217,24 @@ public class Pet {
             petStatusUI.temperatureChange(lastTempStat);
             lastTempStat = getTemperatureStatus(); // TODO IS THERE ANY REASON I SET THIS TWICE??
         }
+    }
+
+    private void checkHowLongPetComfortable(){
+        int minutesPassed = (int)(Calendar.getInstance().getTime().getTime() - lastPetTempUpdate.getTime())/1000/60;
+
+        // give points for every hour spent in "Good" temperature conditions
+        // Note: Only checks last time app was open and now
+        // doesn't know if pet was uncomfortable when app was closed...
+        if(minutesPassed > 60){
+            int pointsAwarded = minutesPassed/60;
+            addPoints(pointsAwarded);
+            lastPetTempUpdate = Calendar.getInstance().getTime();
+        }
+    }
+
+    private void addPoints(int amountAdded){
+        points += amountAdded;
+        petStatusUI.setPoints(points);
     }
 
     public void hide(){
@@ -226,6 +259,8 @@ public class Pet {
     public float getHungerLevel() {return hungerLevel;}
     public float getLonelyLevel() {return lonelyLevel;}
     public PetNotification getNotification() {return petNotification;}
+    public int getPoints(){return points;}
+    public void setPoints(int points){this.points = points;}
 
     public void setTemperatureLevel(float currTemp) {
         temperatureLevel = currTemp;
