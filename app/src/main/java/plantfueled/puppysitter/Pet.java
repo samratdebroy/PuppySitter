@@ -12,7 +12,7 @@ public class Pet {
     private int petID = 0;
     private String petName = "noName"; // name of pet
 
-    private float hungerLevel = 50;
+    private float hungerLevel = 90;
     private float lonelyLevel = 90;
     private float temperatureLevel = 22;
     private boolean isHidden = false;
@@ -184,6 +184,14 @@ public class Pet {
             petNotification.lonelyChange(lastLonelyStat, petName);
             petStatusUI.lonelyChange(lastLonelyStat);
             lastLonelyStat = getLonelyStatus();
+        }
+
+        // Check for Temperature Status Change
+        if(lastTempStat != getTemperatureStatus()){
+            lastTempStat = getTemperatureStatus();
+            petNotification.temperatureChange(lastTempStat, petName);
+            petStatusUI.temperatureChange(lastTempStat);
+            lastTempStat = getTemperatureStatus();
         }
 
     }

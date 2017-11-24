@@ -24,11 +24,16 @@
     <item
         android:id="@+id/LoveButton"
         android:title="Love Pet"
-        app:showAsAction="never"
+        app:showAsAction="always"
         />
     <item
         android:id="@+id/FreezeButton"
         android:title="Freeze Pet"
+        app:showAsAction="never"
+        />
+    <item
+        android:id="@+id/TempGOODButton"
+        android:title="Good Pet Temp"
         app:showAsAction="never"
         />
     <item
