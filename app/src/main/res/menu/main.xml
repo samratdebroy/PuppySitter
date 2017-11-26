@@ -24,7 +24,7 @@
     <item
         android:id="@+id/LoveButton"
         android:title="Love Pet"
-        app:showAsAction="always"
+        app:showAsAction="never"
         />
     <item
         android:id="@+id/FreezeButton"
