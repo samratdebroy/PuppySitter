@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.FloatProperty;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -221,6 +222,14 @@ public class MainActivity extends BluetoothActivity {
         }
 
     }
+
+    @Override
+    public void onTemperatureReceived(float tempInCelsius){
+        Log.i("Temp received is: ", Float.toString(tempInCelsius));
+        // Set the pet's temperature
+        pet.setTemperatureLevel(tempInCelsius);
+    }
+
 
     private void playHeartAnimation() {
         if(heartAnimation.hasEnded() || !heartAnimation.hasStarted()){

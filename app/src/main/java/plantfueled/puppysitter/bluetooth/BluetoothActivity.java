@@ -227,6 +227,7 @@ public abstract class BluetoothActivity extends AppCompatActivity implements Blu
 
     public abstract void onBluetoothSuccess();
     public abstract void onSoundReceived();
+    public abstract void onTemperatureReceived(float tempInCelsius);
     public abstract void onBluetoothFailure();
     public abstract void setIsNear();
     public abstract void setIsFar();
