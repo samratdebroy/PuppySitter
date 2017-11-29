@@ -14,14 +14,11 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.widget.TextView;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.LinkedList;
 import java.util.List;
-
-import plantfueled.puppysitter.R;
 
 /**
  * Created by Simon on 11/10/2017.
@@ -178,19 +175,22 @@ public abstract class BluetoothActivity extends AppCompatActivity implements Blu
         public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
             if(SerialPortUUID.equals(characteristic.getUuid().toString())){
                 blunoGatt.readCharacteristic(characteristic);
-                String str = characteristic.getStringValue(0);
+                byte[] byteArray = characteristic.getValue();
 
-                switch (str.charAt(0)) {
+                switch ((char)byteArray[0]) {
                     case 's':
                         onSoundReceived();
+                        break;
                     case 't':
                         byte[] bytes = new byte[4];
-                        bytes[0] = (byte)str.charAt(1);
-                        bytes[1] = (byte)str.charAt(2);
-                        bytes[2] = (byte)str.charAt(3);
-                        bytes[3] = (byte)str.charAt(4);
+                        bytes[0] = byteArray[1];
+                        bytes[1] = byteArray[2];
+                        bytes[2] = byteArray[3];
+                        bytes[3] = byteArray[4];
+
                         float temperature = ByteBuffer.wrap(bytes).order(ByteOrder.LITTLE_ENDIAN).getFloat();
                         onTemperatureReceived(temperature);
+                        break;
                 }
             }
         }
