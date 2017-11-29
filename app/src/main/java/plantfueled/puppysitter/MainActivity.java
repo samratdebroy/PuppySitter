@@ -228,6 +228,7 @@ public class MainActivity extends BluetoothActivity {
         Log.i("Temp received is: ", Float.toString(tempInCelsius));
         // Set the pet's temperature
         pet.setTemperatureLevel(tempInCelsius);
+        sharedPrefHelper.savePet(pet);
     }
 
 
